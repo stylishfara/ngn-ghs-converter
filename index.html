@@ -19,8 +19,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 20px 16px;
+      justify-content: flex-start;
+      padding: 48px 16px 32px;
     }
 
     .wrapper {
@@ -29,7 +29,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 14px;
+      gap: 16px;
     }
 
     /* ── Tabs ── */
@@ -51,15 +51,15 @@
       font-family: 'Inter', sans-serif;
       font-size: 15px;
       font-weight: 500;
-      color: #8a8a8a;
+      color: #737373;
       cursor: pointer;
       transition: background 150ms, color 150ms;
     }
 
     .tab.active {
       background: #ffffff;
-      color: #111111;
-      font-weight: 700;
+      color: #262626;
+      font-weight: 500;
       box-shadow: 0 1px 4px rgba(0,0,0,0.10);
     }
 
@@ -70,27 +70,56 @@
     /* ── Panels ── */
     .panels { width: 100%; position: relative; }
 
-    .panel { background: #ffffff; padding: 18px 18px 14px; width: 100%; }
+    .panel { background: #ffffff; padding: 24px 20px 20px; width: 100%; }
     .panel.top    { border-radius: 20px 20px 0 0; border-bottom: 1px solid #f0f0f0; }
     .panel.bottom { border-radius: 0 0 20px 20px; }
 
-    .panel-label { font-size: 14px; font-weight: 500; color: #9a9a9a; margin-bottom: 8px; }
+    .panel-label { font-size: 14px; font-weight: 500; color: #737373; margin-bottom: 8px; }
 
     .panel-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+
+    /* Hidden native input — invisible but focusable */
+    .native-input {
+      position: absolute;
+      opacity: 0;
+      width: 1px;
+      height: 1px;
+      top: 0;
+      left: 0;
+      border: none;
+      outline: none;
+      pointer-events: none;
+    }
 
     .amount-display {
       flex: 1; min-width: 0;
       font-size: clamp(28px, 8vw, 44px);
-      font-weight: 700; color: #111;
+      font-weight: 500; color: #262626;
       letter-spacing: -0.02em;
       cursor: pointer;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       line-height: 1.15;
       user-select: none; -webkit-user-select: none;
+      position: relative;
     }
 
     .amount-display.placeholder { color: #d0d0d0; }
+    .amount-display.focused::after {
+      content: '';
+      display: inline-block;
+      width: 2px;
+      height: 0.85em;
+      background: #6b21a8;
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
     .amount-display.readonly-field { cursor: default; }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
 
     .currency-pill {
       display: flex; align-items: center; gap: 7px;
@@ -107,7 +136,7 @@
     .flag-ngn { background: #e8f5e9; }
     .flag-ghs { background: #fff3e0; }
 
-    .currency-name { font-size: 15px; font-weight: 700; color: #111; }
+    .currency-name { font-size: 15px; font-weight: 500; color: #262626; }
 
     /* ── Swap button ── */
     .swap-btn {
@@ -116,7 +145,7 @@
       width: 40px; height: 40px; border-radius: 50%;
       border: 3px solid #e8e8e8; background: #fff;
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer; z-index: 10; color: #444;
+      cursor: pointer; z-index: 10; color: #737373;
       box-shadow: 0 1px 4px rgba(0,0,0,0.08);
       transition: background 150ms, transform 200ms ease-in-out;
     }
@@ -125,42 +154,77 @@
     .swap-btn.spin  { transform: translate(-50%, -50%) rotate(180deg); }
     .swap-btn svg   { width: 16px; height: 16px; }
 
-    /* ── Rate row ── */
-    .rate-edit-row {
+    /* ── Rate card ── */
+    .rate-card {
       width: 100%; background: #fff; border-radius: 14px;
-      padding: 12px 16px;
-      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      padding: 14px 16px;
+      display: flex; flex-direction: column; gap: 10px;
     }
 
-    .rate-edit-label { font-size: 13px; color: #9a9a9a; font-weight: 500; white-space: nowrap; }
+    .rate-card-header {
+      display: flex; align-items: center; justify-content: space-between;
+    }
 
-    .rate-input-wrap { position: relative; display: flex; align-items: center; margin-left: auto; }
+    .rate-card-title { font-size: 13px; font-weight: 500; color: #737373; }
 
-    .rate-edit-input {
-      border: 1px solid #e5e5e5; border-radius: 8px;
-      padding: 6px 44px 6px 10px;
-      font-size: 14px; font-weight: 600; font-family: 'Inter', sans-serif;
-      color: #111; background: #f5f5f5; outline: none;
-      width: 80px; text-align: left;
+    .rate-edit-btn {
+      font-size: 12px; font-weight: 500; color: #737373;
+      background: #f5f5f5; border: none; border-radius: 6px;
+      padding: 3px 10px; cursor: pointer;
+      transition: background 150ms, color 150ms;
+    }
+
+    .rate-edit-btn:hover { background: #e5e5e5; color: #262626; }
+
+    .rate-save-btn {
+      font-size: 12px; font-weight: 500; color: #fff;
+      background: #262626; border: none; border-radius: 6px;
+      padding: 3px 10px; cursor: pointer;
+      transition: opacity 150ms;
+    }
+
+    .rate-save-btn:hover { opacity: 0.85; }
+
+    /* Single-line rate row */
+    .rate-line {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .rate-side {
+      display: flex; align-items: center; gap: 5px;
+    }
+
+    .rate-amount {
+      font-size: 14px; font-weight: 500; color: #262626;
+    }
+
+    .rate-currency {
+      font-size: 13px; font-weight: 500; color: #737373;
+    }
+
+    .rate-equals {
+      font-size: 13px; font-weight: 500; color: #737373;
+    }
+
+    .rate-inline-input {
+      border: 1px solid #e5e5e5; border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 14px; font-weight: 500; font-family: 'Inter', sans-serif;
+      color: #262626; background: #f5f5f5; outline: none;
+      width: 72px;
       -moz-appearance: textfield; appearance: textfield;
       transition: border-color 150ms;
     }
 
-    .rate-edit-input::-webkit-outer-spin-button,
-    .rate-edit-input::-webkit-inner-spin-button { -webkit-appearance: none; }
-    .rate-edit-input:focus { border-color: #6b21a8; background: #fff; }
-
-    .rate-currency-suffix {
-      position: absolute; right: 10px;
-      font-size: 12px; font-weight: 400; color: #b0b0b0;
-      pointer-events: none; user-select: none; white-space: nowrap;
-    }
+    .rate-inline-input::-webkit-outer-spin-button,
+    .rate-inline-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .rate-inline-input:focus { border-color: #262626; background: #fff; }
 
     /* ── CTA ── */
     .cta-btn {
       width: 100%; padding: 17px; border-radius: 999px;
-      border: none; background: #111; color: #fff;
-      font-family: 'Inter', sans-serif; font-size: 17px; font-weight: 700;
+      border: none; background: #262626; color: #fff;
+      font-family: 'Inter', sans-serif; font-size: 17px; font-weight: 500;
       cursor: pointer; transition: opacity 150ms; letter-spacing: -0.01em;
     }
 
@@ -170,7 +234,7 @@
     /* ── Rate footer ── */
     .rate-footer {
       display: flex; align-items: center; justify-content: center;
-      gap: 8px; font-size: 13px; color: #9a9a9a;
+      gap: 8px; font-size: 13px; color: #737373;
     }
 
     .rate-footer .rate-highlight { color: #6b21a8; font-weight: 500; }
@@ -181,10 +245,10 @@
       width: 100%; display: flex; align-items: center; justify-content: space-between;
     }
 
-    .history-title { font-size: 18px; font-weight: 700; color: #111; letter-spacing: -0.01em; }
+    .history-title { font-size: 18px; font-weight: 700; color: #262626; letter-spacing: -0.01em; }
 
     .clear-btn {
-      font-size: 13px; font-weight: 500; color: #9a9a9a;
+      font-size: 13px; font-weight: 500; color: #737373;
       background: none; border: none; cursor: pointer; padding: 4px 0;
       transition: color 150ms;
     }
@@ -205,21 +269,28 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    .history-amounts { display: flex; flex-direction: column; gap: 3px; }
+    .history-amounts { display: flex; flex-direction: column; gap: 6px; }
+    .history-from { font-size: 16px; font-weight: 500; color: #262626; letter-spacing: -0.01em; }
 
-    .history-from { font-size: 16px; font-weight: 700; color: #111; letter-spacing: -0.01em; }
+    .history-arrow {
+      display: flex; align-items: center; gap: 6px;
+    }
 
-    .history-to { font-size: 13px; font-weight: 500; color: #6b21a8; }
+    .history-arrow-line {
+      display: flex; align-items: center; gap: 4px; color: #b0b0b0;
+    }
+
+    .history-to { font-size: 14px; font-weight: 500; color: #262626; }
 
     .history-meta { text-align: right; display: flex; flex-direction: column; gap: 3px; align-items: flex-end; }
 
     .history-direction {
-      font-size: 11px; font-weight: 600; color: #fff;
-      background: #111; border-radius: 6px; padding: 2px 7px;
-      letter-spacing: 0.04em;
+      font-size: 12px; font-weight: 500; color: #737373;
+      background: #f5f5f5; border: none;
+      border-radius: 4px; padding: 2px 8px;
     }
 
-    .history-time { font-size: 11px; color: #b0b0b0; font-weight: 400; }
+    .history-time { font-size: 11px; color: #b0b0b0; }
 
     .history-empty {
       width: 100%; background: #fff; border-radius: 16px;
@@ -228,72 +299,11 @@
     }
 
     .history-empty-icon { font-size: 32px; line-height: 1; }
-    .history-empty-text { font-size: 15px; font-weight: 600; color: #111; }
-    .history-empty-sub  { font-size: 13px; color: #9a9a9a; }
-
-    /* ── Keypad overlay ── */
-    .keypad-overlay {
-      position: fixed; inset: 0; z-index: 100;
-      display: flex; flex-direction: column; justify-content: flex-end;
-      pointer-events: none; opacity: 0;
-      transition: opacity 200ms ease;
-    }
-
-    .keypad-overlay.open { pointer-events: auto; opacity: 1; }
-
-    .keypad-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.25); }
-
-    .keypad-sheet {
-      position: relative; z-index: 1;
-      background: #f5f5f5; border-radius: 24px 24px 0 0;
-      padding: 12px 16px 32px;
-      transform: translateY(100%);
-      transition: transform 300ms cubic-bezier(0.32, 0.72, 0, 1);
-    }
-
-    .keypad-overlay.open .keypad-sheet { transform: translateY(0); }
-
-    .keypad-handle {
-      width: 36px; height: 4px; background: #ccc;
-      border-radius: 2px; margin: 0 auto 14px;
-    }
-
-    .keypad-display {
-      background: #fff; border-radius: 14px;
-      padding: 14px 18px; margin-bottom: 12px;
-      display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    }
-
-    .keypad-display-amount {
-      font-size: 32px; font-weight: 700; color: #111;
-      letter-spacing: -0.02em; flex: 1; min-width: 0;
-      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    }
-
-    .keypad-display-currency { font-size: 14px; font-weight: 600; color: #9a9a9a; flex-shrink: 0; }
-
-    .keypad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-
-    .key {
-      background: #fff; border: none; border-radius: 14px;
-      padding: 0; height: 64px;
-      font-family: 'Inter', sans-serif; font-size: 22px; font-weight: 600; color: #111;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background 100ms, transform 80ms;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .key:active { background: #e8e8e8; transform: scale(0.96); }
-    .key.key-dot  { font-size: 26px; font-weight: 700; }
-    .key.key-del  { background: #ebe6f0; color: #6b21a8; font-size: 18px; }
-    .key.key-del:active { background: #d8cfe6; }
-    .key.key-done { background: #111; color: #fff; }
-    .key.key-done:active { background: #333; }
+    .history-empty-text { font-size: 15px; font-weight: 500; color: #262626; }
+    .history-empty-sub  { font-size: 13px; color: #737373; }
 
     @media (max-width: 380px) {
       .tab { padding: 7px 14px; font-size: 14px; }
-      .key { height: 56px; font-size: 20px; }
     }
   </style>
 </head>
@@ -310,12 +320,25 @@
   <div class="view active" id="view-convert">
 
     <div class="panels">
+      <!-- Hidden native input that drives the amount -->
+      <input
+        class="native-input"
+        id="native-input"
+        type="number"
+        inputmode="decimal"
+        min="0"
+        step="any"
+        autocomplete="off"
+        aria-hidden="true"
+        tabindex="-1"
+      />
+
       <div class="panel top">
-        <div class="panel-label">Sell</div>
+        <div class="panel-label">From</div>
         <div class="panel-row">
           <div class="amount-display placeholder" id="from-display" tabindex="0" role="button" aria-label="Enter amount to sell">0</div>
           <div class="currency-pill">
-            <div class="currency-flag flag-ngn" id="from-flag">🇳🇬</div>
+            <div class="currency-flag flag-ngn" id="from-flag"></div>
             <span class="currency-name" id="from-name">NGN</span>
           </div>
         </div>
@@ -328,32 +351,49 @@
       </button>
 
       <div class="panel bottom">
-        <div class="panel-label">Buy</div>
+        <div class="panel-label">To</div>
         <div class="panel-row">
           <div class="amount-display placeholder readonly-field" id="to-display">0</div>
           <div class="currency-pill">
-            <div class="currency-flag flag-ghs" id="to-flag">🇬🇭</div>
+            <div class="currency-flag flag-ghs" id="to-flag"></div>
             <span class="currency-name" id="to-name">GHS</span>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="rate-edit-row">
-      <span class="rate-edit-label" id="rate-label">1,000 NGN =</span>
-      <div class="rate-input-wrap">
-        <input type="number" class="rate-edit-input" id="rate-input" value="49" min="0.000001" step="any" />
-        <span class="rate-currency-suffix" id="rate-unit">GHS</span>
+    <div class="rate-card">
+      <div class="rate-card-header">
+        <span class="rate-card-title">Exchange Rate</span>
+        <button class="rate-edit-btn" id="rate-edit-btn">Edit</button>
+      </div>
+      <!-- Display mode -->
+      <div class="rate-line" id="rate-display-line">
+        <div class="rate-side">
+          <span class="rate-amount" id="rate-disp-left">1,000</span>
+          <span class="rate-currency" id="rate-disp-left-cur">NGN</span>
+        </div>
+        <span class="rate-equals">=</span>
+        <div class="rate-side">
+          <span class="rate-amount" id="rate-disp-right">49</span>
+          <span class="rate-currency" id="rate-disp-right-cur">GHS</span>
+        </div>
+      </div>
+      <!-- Edit mode -->
+      <div class="rate-line" id="rate-edit-line" style="display:none">
+        <div class="rate-side">
+          <input type="number" inputmode="decimal" class="rate-inline-input" id="rate-input-left" value="1000" min="1" step="any" />
+          <span class="rate-currency" id="rate-edit-left-cur">NGN</span>
+        </div>
+        <span class="rate-equals">=</span>
+        <div class="rate-side">
+          <input type="number" inputmode="decimal" class="rate-inline-input" id="rate-input-right" value="49" min="0.000001" step="any" />
+          <span class="rate-currency" id="rate-edit-right-cur">GHS</span>
+        </div>
       </div>
     </div>
 
     <button class="cta-btn" id="cta-btn">Convert</button>
-
-    <div class="rate-footer">
-      <span id="footer-rate">1,000 GHS = <span class="rate-highlight">20,410 NGN</span></span>
-      <div class="rate-divider"></div>
-      <span>Tap amount to enter</span>
-    </div>
 
   </div>
 
@@ -368,42 +408,20 @@
 
 </div>
 
-<!-- Keypad overlay -->
-<div class="keypad-overlay" id="keypad-overlay" role="dialog" aria-modal="true" aria-label="Number keypad">
-  <div class="keypad-backdrop" id="keypad-backdrop"></div>
-  <div class="keypad-sheet">
-    <div class="keypad-handle"></div>
-    <div class="keypad-display">
-      <div class="keypad-display-amount" id="keypad-display-amount">0</div>
-      <div class="keypad-display-currency" id="keypad-display-currency">NGN</div>
-    </div>
-    <div class="keypad-grid">
-      <button class="key" data-key="1">1</button>
-      <button class="key" data-key="2">2</button>
-      <button class="key" data-key="3">3</button>
-      <button class="key" data-key="4">4</button>
-      <button class="key" data-key="5">5</button>
-      <button class="key" data-key="6">6</button>
-      <button class="key" data-key="7">7</button>
-      <button class="key" data-key="8">8</button>
-      <button class="key" data-key="9">9</button>
-      <button class="key key-dot" data-key=".">·</button>
-      <button class="key" data-key="0">0</button>
-      <button class="key key-del" data-key="del">⌫</button>
-    </div>
-    <button class="key key-done" id="keypad-done" style="margin-top:10px;width:100%;height:54px;font-size:17px;border-radius:14px;">Done</button>
-  </div>
-</div>
-
 <script>
+  const FLAGS = {
+    NGN: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="22" height="22" style="border-radius:50%;display:block"><rect width="900" height="600" fill="#fff"/><rect width="300" height="600" fill="#008751"/><rect x="600" width="300" height="600" fill="#008751"/></svg>`,
+    GHS: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="22" height="22" style="border-radius:50%;display:block"><rect width="900" height="200" fill="#CE1126"/><rect y="200" width="900" height="200" fill="#FCD116"/><rect y="400" width="900" height="200" fill="#006B3F"/><polygon points="450,180 474,252 550,252 490,296 512,368 450,324 388,368 410,296 350,252 426,252" fill="#000"/></svg>`,
+  };
+
   const CURRENCIES = {
-    NGN: { flag: '🇳🇬', flagClass: 'flag-ngn', symbol: '₦' },
-    GHS: { flag: '🇬🇭', flagClass: 'flag-ghs', symbol: '₵' },
+    NGN: { flagSVG: FLAGS.NGN, flagClass: 'flag-ngn', symbol: '₦' },
+    GHS: { flagSVG: FLAGS.GHS, flagClass: 'flag-ghs', symbol: '₵' },
   };
 
   let isNGNtoGHS = true;
   const rates = { NGN_GHS: 0.049, GHS_NGN: 20.41 };
-  let rawAmount = '';
+  let rateEditing = false;
 
   const fromDisplay   = document.getElementById('from-display');
   const toDisplay     = document.getElementById('to-display');
@@ -411,21 +429,154 @@
   const toFlag        = document.getElementById('to-flag');
   const fromName      = document.getElementById('from-name');
   const toName        = document.getElementById('to-name');
-  const rateInput     = document.getElementById('rate-input');
-  const rateLabel     = document.getElementById('rate-label');
-  const rateUnit      = document.getElementById('rate-unit');
-  const footerRate    = document.getElementById('footer-rate');
   const swapBtn       = document.getElementById('swap-btn');
   const ctaBtn        = document.getElementById('cta-btn');
-  const keypadOverlay = document.getElementById('keypad-overlay');
-  const keypadBackdrop= document.getElementById('keypad-backdrop');
-  const keypadDispAmt = document.getElementById('keypad-display-amount');
-  const keypadDispCur = document.getElementById('keypad-display-currency');
-  const keypadDone    = document.getElementById('keypad-done');
+  const nativeInput   = document.getElementById('native-input');
   const historyList   = document.getElementById('history-list');
   const clearBtn      = document.getElementById('clear-btn');
 
-  /* ── History (localStorage) ── */
+  const rateEditBtn      = document.getElementById('rate-edit-btn');
+  const rateDisplayLine  = document.getElementById('rate-display-line');
+  const rateEditLine     = document.getElementById('rate-edit-line');
+  const rateDispLeft     = document.getElementById('rate-disp-left');
+  const rateDispLeftCur  = document.getElementById('rate-disp-left-cur');
+  const rateDispRight    = document.getElementById('rate-disp-right');
+  const rateDispRightCur = document.getElementById('rate-disp-right-cur');
+  const rateInputLeft    = document.getElementById('rate-input-left');
+  const rateInputRight   = document.getElementById('rate-input-right');
+  const rateEditLeftCur  = document.getElementById('rate-edit-left-cur');
+  const rateEditRightCur = document.getElementById('rate-edit-right-cur');
+
+  /* ── Native input focus trick ── */
+  function openKeypad() {
+    nativeInput.style.pointerEvents = 'auto';
+    nativeInput.focus();
+    nativeInput.style.pointerEvents = 'none';
+    fromDisplay.classList.add('focused');
+  }
+
+  nativeInput.addEventListener('blur', () => fromDisplay.classList.remove('focused'));
+  nativeInput.addEventListener('input', updateDisplays);
+
+  fromDisplay.addEventListener('click', openKeypad);
+  fromDisplay.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') openKeypad();
+  });
+
+  /* ── Helpers ── */
+  function currentRate() {
+    return isNGNtoGHS ? rates.NGN_GHS : rates.GHS_NGN;
+  }
+
+  function fmtLive(val) {
+    if (!val) return '0';
+    const [intPart, decPart] = String(val).split('.');
+    const intFormatted = parseInt(intPart || '0', 10).toLocaleString('en-US');
+    return decPart !== undefined ? intFormatted + '.' + decPart : intFormatted;
+  }
+
+  function updateDisplays() {
+    const raw    = nativeInput.value;
+    const amount = parseFloat(raw) || 0;
+    const result = amount * currentRate();
+
+    fromDisplay.textContent = raw ? fmtLive(raw) : '0';
+    fromDisplay.classList.toggle('placeholder', !raw || amount === 0);
+
+    toDisplay.textContent = amount > 0
+      ? result.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })
+      : '0';
+    toDisplay.classList.toggle('placeholder', amount === 0);
+  }
+
+  function updateRateCard() {
+    // Always show as: [leftAmt] [fromCur] = [rightAmt] [toCur]
+    // Left is always 1,000 units of the "from" currency
+    const from   = isNGNtoGHS ? 'NGN' : 'GHS';
+    const to     = isNGNtoGHS ? 'GHS' : 'NGN';
+    const rate   = isNGNtoGHS ? rates.NGN_GHS : rates.GHS_NGN;
+    const right  = parseFloat((rate * 1000).toFixed(4));
+
+    rateDispLeft.textContent     = '1,000';
+    rateDispLeftCur.textContent  = from;
+    rateDispRight.textContent    = right.toLocaleString('en-US');
+    rateDispRightCur.textContent = to;
+
+    rateInputLeft.value          = 1000;
+    rateEditLeftCur.textContent  = from;
+    rateInputRight.value         = right;
+    rateEditRightCur.textContent = to;
+  }
+
+  function updateLabels() {
+    const from = isNGNtoGHS ? 'NGN' : 'GHS';
+    const to   = isNGNtoGHS ? 'GHS' : 'NGN';
+
+    fromFlag.innerHTML   = CURRENCIES[from].flagSVG;
+    fromFlag.className   = `currency-flag ${CURRENCIES[from].flagClass}`;
+    fromName.textContent = from;
+    toFlag.innerHTML     = CURRENCIES[to].flagSVG;
+    toFlag.className     = `currency-flag ${CURRENCIES[to].flagClass}`;
+    toName.textContent   = to;
+
+    updateRateCard();
+  }
+
+  /* ── Rate edit / save ── */
+  function setRateEditMode(editing) {
+    rateEditing = editing;
+    rateDisplayLine.style.display = editing ? 'none' : 'flex';
+    rateEditLine.style.display    = editing ? 'flex' : 'none';
+    rateEditBtn.textContent = editing ? 'Save' : 'Edit';
+    rateEditBtn.className   = editing ? 'rate-save-btn' : 'rate-edit-btn';
+    if (editing) rateInputLeft.focus();
+  }
+
+  rateEditBtn.addEventListener('click', () => {
+    if (!rateEditing) {
+      setRateEditMode(true);
+    } else {
+      const leftAmt  = parseFloat(rateInputLeft.value);
+      const rightAmt = parseFloat(rateInputRight.value);
+      if (leftAmt > 0 && rightAmt > 0) {
+        const perUnit = rightAmt / leftAmt;
+        if (isNGNtoGHS) {
+          rates.NGN_GHS = perUnit;
+          rates.GHS_NGN = parseFloat((1 / perUnit).toFixed(6));
+        } else {
+          rates.GHS_NGN = perUnit;
+          rates.NGN_GHS = parseFloat((1 / perUnit).toFixed(6));
+        }
+      }
+      updateRateCard();
+      updateDisplays();
+      setRateEditMode(false);
+    }
+  });
+
+  /* ── Swap ── */
+  swapBtn.addEventListener('click', () => {
+    isNGNtoGHS = !isNGNtoGHS;
+    nativeInput.value = '';
+    swapBtn.classList.add('spin');
+    setTimeout(() => swapBtn.classList.remove('spin'), 210);
+    updateLabels();
+    updateDisplays();
+  });
+
+  /* ── Convert ── */
+  ctaBtn.addEventListener('click', () => {
+    const amount = parseFloat(nativeInput.value);
+    if (!amount || amount <= 0) { openKeypad(); return; }
+    const from   = isNGNtoGHS ? 'NGN' : 'GHS';
+    const to     = isNGNtoGHS ? 'GHS' : 'NGN';
+    const result = amount * currentRate();
+    addHistoryEntry(from, to, amount, result);
+    toDisplay.style.color = '#16a34a';
+    setTimeout(() => toDisplay.style.color = '', 600);
+  });
+
+  /* ── History ── */
   const HISTORY_KEY = 'ngn_ghs_history';
 
   function loadHistory() {
@@ -437,23 +588,20 @@
     localStorage.setItem(HISTORY_KEY, JSON.stringify(items));
   }
 
-  function addHistoryEntry(from, to, amount, result, rate) {
+  function addHistoryEntry(from, to, amount, result) {
     const items = loadHistory();
-    items.unshift({ from, to, amount, result, rate, ts: Date.now() });
+    items.unshift({ from, to, amount, result, ts: Date.now() });
     if (items.length > 50) items.pop();
     saveHistory(items);
   }
 
   function formatTime(ts) {
-    const d = new Date(ts);
-    const now = new Date();
-    const diffMs = now - d;
-    const diffMin = Math.floor(diffMs / 60000);
-    if (diffMin < 1)   return 'Just now';
-    if (diffMin < 60)  return `${diffMin}m ago`;
+    const diffMin = Math.floor((Date.now() - ts) / 60000);
+    if (diffMin < 1)  return 'Just now';
+    if (diffMin < 60) return `${diffMin}m ago`;
     const diffH = Math.floor(diffMin / 60);
-    if (diffH < 24)    return `${diffH}h ago`;
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    if (diffH < 24)   return `${diffH}h ago`;
+    return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   }
 
   function renderHistory() {
@@ -467,7 +615,6 @@
         </div>`;
       return;
     }
-
     historyList.innerHTML = items.map(item => {
       const fromSym = CURRENCIES[item.from].symbol;
       const toSym   = CURRENCIES[item.to].symbol;
@@ -477,7 +624,14 @@
         <div class="history-item">
           <div class="history-amounts">
             <div class="history-from">${fromSym}${amtFmt}</div>
-            <div class="history-to">→ ${toSym}${resFmt}</div>
+            <div class="history-arrow">
+              <svg width="14" height="22" viewBox="0 0 14 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="2" y1="0" x2="2" y2="14" stroke="#d0d0d0" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="2" y1="14" x2="12" y2="14" stroke="#d0d0d0" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="12" cy="14" r="2" fill="#b0b0b0"/>
+              </svg>
+              <div class="history-to">${toSym}${resFmt}</div>
+            </div>
           </div>
           <div class="history-meta">
             <span class="history-direction">${item.from} → ${item.to}</span>
@@ -488,7 +642,6 @@
   }
 
   clearBtn.addEventListener('click', () => {
-    if (loadHistory().length === 0) return;
     saveHistory([]);
     renderHistory();
   });
@@ -504,132 +657,9 @@
     });
   });
 
-  /* ── Helpers ── */
-  function currentRate() {
-    return (parseFloat(rateInput.value) || (isNGNtoGHS ? rates.NGN_GHS : rates.GHS_NGN) * 1000) / 1000;
-  }
-
-  function fmtLive(raw) {
-    if (!raw || raw === '0') return '0';
-    const [intPart, decPart] = raw.split('.');
-    const intFormatted = parseInt(intPart || '0', 10).toLocaleString('en-US');
-    return decPart !== undefined ? intFormatted + '.' + decPart : intFormatted;
-  }
-
-  function updateDisplays() {
-    const amount = parseFloat(rawAmount) || 0;
-    const result = amount * currentRate();
-    const from   = isNGNtoGHS ? 'NGN' : 'GHS';
-
-    fromDisplay.textContent = rawAmount && rawAmount !== '0' ? fmtLive(rawAmount) : '0';
-    fromDisplay.classList.toggle('placeholder', !rawAmount || rawAmount === '0');
-
-    toDisplay.textContent = amount > 0
-      ? result.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })
-      : '0';
-    toDisplay.classList.toggle('placeholder', amount === 0);
-
-    keypadDispAmt.textContent = fmtLive(rawAmount) || '0';
-    keypadDispCur.textContent = from;
-  }
-
-  function updateLabels() {
-    const from = isNGNtoGHS ? 'NGN' : 'GHS';
-    const to   = isNGNtoGHS ? 'GHS' : 'NGN';
-
-    fromFlag.textContent = CURRENCIES[from].flag;
-    fromFlag.className   = `currency-flag ${CURRENCIES[from].flagClass}`;
-    fromName.textContent = from;
-    toFlag.textContent   = CURRENCIES[to].flag;
-    toFlag.className     = `currency-flag ${CURRENCIES[to].flagClass}`;
-    toName.textContent   = to;
-
-    const rate   = isNGNtoGHS ? rates.NGN_GHS : rates.GHS_NGN;
-    const rate1k = parseFloat((rate * 1000).toFixed(4));
-    const inv1k  = parseFloat(((1 / rate) * 1000).toFixed(2));
-    rateInput.value = rate1k;
-    rateLabel.textContent = `1,000 ${from} =`;
-    rateUnit.textContent  = to;
-    footerRate.innerHTML  = `1,000 ${to} = <span class="rate-highlight">${inv1k.toLocaleString('en-US')} ${from}</span>`;
-    keypadDispCur.textContent = from;
-  }
-
-  /* ── Keypad ── */
-  function openKeypad() {
-    keypadOverlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeKeypad() {
-    keypadOverlay.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  function handleKey(k) {
-    if (k === 'del') {
-      rawAmount = rawAmount.slice(0, -1);
-    } else if (k === '.') {
-      if (rawAmount.includes('.')) return;
-      rawAmount = rawAmount === '' ? '0.' : rawAmount + '.';
-    } else {
-      if (rawAmount === '0') rawAmount = k;
-      else rawAmount += k;
-      const parts = rawAmount.split('.');
-      if (parts[0].length > 12) { rawAmount = rawAmount.slice(0, -1); return; }
-      if (parts[1] && parts[1].length > 4) { rawAmount = rawAmount.slice(0, -1); return; }
-    }
-    updateDisplays();
-  }
-
-  document.querySelectorAll('.key[data-key]').forEach(btn => {
-    btn.addEventListener('click', () => handleKey(btn.dataset.key));
-  });
-
-  fromDisplay.addEventListener('click', openKeypad);
-  fromDisplay.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openKeypad(); });
-  keypadBackdrop.addEventListener('click', closeKeypad);
-  keypadDone.addEventListener('click', closeKeypad);
-
-  /* ── Swap ── */
-  swapBtn.addEventListener('click', () => {
-    isNGNtoGHS = !isNGNtoGHS;
-    rawAmount = '';
-    swapBtn.classList.add('spin');
-    setTimeout(() => swapBtn.classList.remove('spin'), 210);
-    updateLabels();
-    updateDisplays();
-  });
-
-  /* ── Rate input ── */
-  rateInput.addEventListener('input', () => {
-    const rate1k = parseFloat(rateInput.value);
-    if (rate1k > 0) {
-      const perUnit = rate1k / 1000;
-      if (isNGNtoGHS) { rates.NGN_GHS = perUnit; rates.GHS_NGN = parseFloat((1 / perUnit).toFixed(4)); }
-      else             { rates.GHS_NGN = perUnit; rates.NGN_GHS = parseFloat((1 / perUnit).toFixed(6)); }
-      const from = isNGNtoGHS ? 'NGN' : 'GHS';
-      const to   = isNGNtoGHS ? 'GHS' : 'NGN';
-      const inv1k = parseFloat(((1 / perUnit) * 1000).toFixed(2));
-      footerRate.innerHTML = `1,000 ${to} = <span class="rate-highlight">${inv1k.toLocaleString('en-US')} ${from}</span>`;
-    }
-    updateDisplays();
-  });
-
-  /* ── Convert ── */
-  ctaBtn.addEventListener('click', () => {
-    const amount = parseFloat(rawAmount);
-    if (!amount || amount <= 0) { openKeypad(); return; }
-    const from   = isNGNtoGHS ? 'NGN' : 'GHS';
-    const to     = isNGNtoGHS ? 'GHS' : 'NGN';
-    const result = amount * currentRate();
-    addHistoryEntry(from, to, amount, result, currentRate());
-    // flash the to-display as confirmation
-    toDisplay.style.color = '#16a34a';
-    setTimeout(() => toDisplay.style.color = '', 600);
-  });
-
   /* ── Init ── */
   updateLabels();
+  updateRateCard();
   updateDisplays();
 </script>
 </body>
